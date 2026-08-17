@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Transformer desde cero | Visualizador</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <p class="eyebrow">Proyecto 1 · Semana 6</p>
+    <h1>Atención <span>visible</span></h1>
+    <p>Explore las decisiones de un encoder de sentimiento y la generación causal de un Mini-GPT entrenados sobre SST-2.</p>
+    <div id="model-status" class="status loading" role="status">Cargando pesos entrenados…</div>
+  </header>
+
+  <main>
+    <section class="panel" aria-labelledby="sentiment-title">
+      <div class="panel-number">01</div>
+      <div class="panel-heading">
+        <div>
+          <p class="kicker">Encoder bidireccional</p>
+          <h2 id="sentiment-title">Análisis de sentimiento</h2>
+        </div>
+        <div id="prediction" class="prediction empty" aria-live="polite">Sin análisis</div>
+      </div>
+      <form id="sentiment-form" class="controls">
+        <label for="sentence">Oración en inglés</label>
+        <div class="input-row">
+          <input id="sentence" type="text" value="this movie is surprisingly good" maxlength="240" autocomplete="off">
+          <button type="submit" disabled>Analizar</button>
+        </div>
+      </form>
+      <p id="sentiment-error" class="error" role="alert"></p>
+      <div id="encoder-heatmaps" class="heatmaps" aria-live="polite"></div>
+    </section>
+
+    <section class="panel accent" aria-labelledby="gpt-title">
+      <div class="panel-number">02</div>
+      <div class="panel-heading">
+        <div>
+          <p class="kicker">Decoder autoregresivo</p>
+          <h2 id="gpt-title">Generación de texto</h2>
+        </div>
+      </div>
+      <form id="gpt-form" class="controls">
+        <label for="seed">Texto semilla en inglés</label>
+        <div class="input-row">
+          <input id="seed" type="text" value="the film" maxlength="180" autocomplete="off">
+          <button type="submit" disabled>Generar</button>
+        </div>
+        <div class="temperature-control">
+          <label for="temperature">Temperatura</label>
+          <input id="temperature" type="range" min="0.5" max="1.5" step="0.1" value="0.8">
+          <output id="temperature-value" for="temperature">0.8</output>
+          <span>Precisa</span><span class="spacer"></span><span>Diversa</span>
+        </div>
+      </form>
+      <p id="gpt-error" class="error" role="alert"></p>
+      <div class="generated-block">
+        <span>Texto generado</span>
+        <p id="generated-text" aria-live="polite">Esperando una semilla.</p>
+      </div>
+      <div id="gpt-heatmaps" class="heatmaps" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <footer>Pesos exportados del notebook · Cálculo local en el navegador</footer>
+  <script type="module" src="app.mjs"></script>
+</body>
+</html>
