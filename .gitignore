@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# Entornos virtuales
+.venv/
+venv/
+env/
+
+# Sistema operativo / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Datos y cachés locales (no se versionan; el notebook los descarga solo)
+*.csv
+!notebooks/artifacts/ablation.csv
+data/
+kagglehub/
