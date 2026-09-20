@@ -56,7 +56,7 @@ evidence; no generated outputs will be invented.
 
 - [x] T1 — Record the authorized scope, exclusions, acceptance criteria, and
   verification plan in this feature document.
-- [ ] T2 — Remove the dead processed-data route and apply the smallest
+- [x] T2 — Remove the dead processed-data route and apply the smallest
   evidence-based runtime reduction while retaining the two-stage, five-config,
   three-seed methodology.
 - [ ] T3 — Run available local notebook and artifact checks; execute the full
@@ -71,9 +71,11 @@ evidence; no generated outputs will be invented.
 | Task | Command or observation | Result |
 | --- | --- | --- |
 | T1 | Read `docs/CC3092_Proyecto2.md`, `docs/Documentacion_Notebook.md`, `mvp/`, and the notebook's recorded execution. | Confirmed scope: Deliverables 1 and 3 only. The recorded notebook execution is 1966.1 s (32.8 min) and ends in an `AssertionError`; its `PROCESSED_URL` is a TODO marker that falls back to raw data. |
+| T2 | `uv run --with nbformat python -c '…nbformat.validate(…); assert no TODO/processed path; assert EPOCHS_B=10…'` | Passed: 55 cells validate; the notebook contains no `TODO_RELEASE_ASSET_URL`, `PROCESSED_URL`, or `REBUILD_FROM_RAW` source and uses the direct Kaggle raw-data path. The recorded per-epoch ablation timings project that reducing Stage B from 12 to 10 epochs should recover the 2.8-minute overrun, but this is not a T4 measurement. |
 
 ## Work-unit evidence
 
 | Task | Commit | Focused check | Runtime check | Rollback boundary |
 | --- | --- | --- | --- | --- |
 | T1 | Pending | Markdown structure reviewed. | N/A — planning document only. | Remove `odd/tasks/proyecto2-entrega-final.md`. |
+| T2 | Pending | `uv run --with nbformat …` passed; `git diff --check` passed. | Full notebook run is pending authorized Colab T4 access. | Revert the raw-path simplification and Stage B epoch setting in `notebooks/proyecto2.ipynb`. |
