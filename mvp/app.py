@@ -65,15 +65,17 @@ def cargar_artefactos():
     return registros, metrics, preprocessing
 
 
-def umbral_etapa_b(registros):
-    """Recupera el umbral de decision de Etapa B a partir de `pred`.
+def umbral_etapa_b(registros, metrics):
+    """Umbral de decision de Etapa B.
 
-    El notebook fija el umbral como el cuantil (1 - ALERT_RATE) de `prob_b`
-    sobre el conjunto de prueba completo, pero solo exporto la decision ya
-    tomada. Recalcular el cuantil aqui daria un valor distinto porque el JSON
-    esta submuestreado, asi que se toma la menor probabilidad efectivamente
-    marcada como alerta: reproduce exactamente las decisiones del notebook.
+    Los artefactos nuevos lo exportan como `threshold_b` (cuantil 1 - ALERT_RATE
+    de las probabilidades de validacion) y se usa tal cual. Si el artefacto es
+    anterior y no lo trae, se recupera a partir de `pred`: el JSON esta
+    submuestreado, asi que recalcular un cuantil daria otro valor, y la menor
+    probabilidad marcada como alerta reproduce las decisiones del notebook.
     """
+    if "threshold_b" in metrics:
+        return metrics["threshold_b"]
     alertados = [r["prob_b"] for r in registros if r["pred"] == 1]
     return min(alertados) if alertados else 1.0
 
@@ -173,7 +175,7 @@ def main():
 
     registros, metrics, preprocessing = cargar_artefactos()
     thr_a = metrics["official_threshold"]
-    thr_b = umbral_etapa_b(registros)
+    thr_b = umbral_etapa_b(registros, metrics)
 
     # ---- Seleccion del remitente -------------------------------------------
     st.sidebar.header("Seleccion de remitente")
