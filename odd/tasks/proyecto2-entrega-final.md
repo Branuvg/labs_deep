@@ -1,9 +1,10 @@
-# Project 2 final delivery — Deliverables 1 and 3
+# Project 2 final delivery — Deliverables 1, 2, and 3
 
 ## Objective
 
-Prepare and verify only the executed notebook (Deliverable 1) and the public
-Streamlit MVP link (Deliverable 3) for Project 2.
+Prepare and verify the executed notebook (Deliverable 1), the executive PDF
+report (Deliverable 2), and the public Streamlit MVP link (Deliverable 3) for
+Project 2.
 
 ## Authorized scope
 
@@ -16,11 +17,8 @@ Streamlit MVP link (Deliverable 3) for Project 2.
   is actually available.
 - Create the required URL-only `.txt` delivery file only after the public MVP
   URL is confirmed.
-
-## Explicit exclusion
-
-The executive-report PDF is out of scope. Do not create, edit, or commit any
-PDF report.
+- Create and verify `docs/Reporte_Ejecutivo_Proyecto2.pdf` as the executive
+  report deliverable.
 
 ## Constraints
 
@@ -32,6 +30,17 @@ PDF report.
 - Preserve unrelated untracked `.atl/`, `.codegraph/`, and `docs/` files.
 - Do not push, open a PR, or merge changes.
 
+## Executive-report requirements
+
+- Write 2,000-3,000 body words in professional, neutral Spanish, excluding
+  references.
+- Cover business and legislative context, model design, the ablation, five
+  named cases, limitations, and a production path.
+- Include at least three academic references from 2020-2025 and an AI-use
+  declaration of no more than 200 words.
+- Validate text extraction, body-word count, and rendered visual legibility
+  before marking the report task complete.
+
 ## Acceptance criteria
 
 1. The notebook has no unimplemented processed-data route and runs end-to-end
@@ -41,6 +50,8 @@ PDF report.
 3. The Streamlit app starts locally and loads the committed artifacts.
 4. The MVP is publicly reachable from Streamlit Cloud and a `.txt` file contains
    only its confirmed URL.
+5. The executive report PDF satisfies all executive-report requirements and is
+   readable after extraction and rendering validation.
 
 ## Delivery strategy
 
@@ -49,8 +60,8 @@ PDF report.
 
 ## Estimated change size
 
-Approximately 80–130 changed lines, primarily notebook source and delivery
-evidence; no generated outputs will be invented.
+Approximately 350 changed lines plus the generated PDF, primarily report source
+and delivery evidence; no experimental outputs will be invented.
 
 ## Tasks
 
@@ -64,7 +75,9 @@ evidence; no generated outputs will be invented.
   real duration and outputs.
 - [x] T4 — Run the Streamlit MVP locally against committed artifacts.
 - [ ] T5 — Deploy from `proyecto2` through the authorized Streamlit Cloud/GitHub
-  session, confirm the public URL, and create the URL-only delivery file.
+   session, confirm the public URL, and create the URL-only delivery file.
+- [x] T6 — Create and verify the executive PDF report, including factual scope,
+  references, AI-use declaration, text extraction, word count, and visual review.
 
 ## Verification log
 
@@ -76,6 +89,9 @@ evidence; no generated outputs will be invented.
 | T4 | `uv run --with-requirements mvp/requirements.txt python -c 'from streamlit.testing.v1 import AppTest; at=AppTest.from_file("mvp/app.py").run(); assert not at.exception, at.exception; assert len(at.radio)==1 and len(at.selectbox)==1 and len(at.metric)==4 and len(at.dataframe)==1; assert "ALERTA" in at.metric[2].value; print("default alert case rendered with 4 metrics and sequence table"); [(at.radio[0].set_value(value).run(), (not at.exception) or (_ for _ in ()).throw(AssertionError(at.exception)), print(f"{value}: rendered")) for value in ["Todos", "Solo alertados", "Solo lavado confirmado", "Falsos negativos"]]'` | Passed: the default alert case rendered four metrics and a sequence table. `Todos`, `Solo alertados`, `Solo lavado confirmado`, and `Falsos negativos` each rendered without exceptions. |
 | T4 | `uv run --with nbformat python -c 'from pathlib import Path; import json; artifacts=Path("notebooks/artifacts"); required=["mvp_data.json", "metrics.json", "preprocessing.json"]; assert all((artifacts/name).is_file() for name in required); records=json.loads((artifacts/"mvp_data.json").read_text()); metrics=json.loads((artifacts/"metrics.json").read_text()); preprocessing=json.loads((artifacts/"preprocessing.json").read_text()); assert records and "official_threshold" in metrics and "max_len" in preprocessing; print(f"artifacts valid: {len(records)} MVP records, max_len={preprocessing[\"max_len\"]}")'` | Passed: all required artifacts exist and parse; `mvp_data.json` contains 2,000 records and `preprocessing.json` reports `max_len=29`. |
 | T5 | Authorized Streamlit Cloud/GitHub deployment | Blocked: this environment exposes no Streamlit Cloud/GitHub session tool. No public URL or URL-only `.txt` file was created. Deployment must use branch `proyecto2`, main file `mvp/app.py`, and the existing authorized session. |
+| T6 | `uv run --with reportlab python docs/generar_reporte_ejecutivo_proyecto2.py` | Passed: created `docs/Reporte_Ejecutivo_Proyecto2.pdf`; source body count is 2,072 words and the AI-use declaration is 65 words. |
+| T6 | `uv run --with pypdf python -c '...'` extracted all PDF pages and checked required factual markers. | Passed: 5 pages, 2,232 extracted body words, 17,005 extracted characters, and all required markers present. The extracted count includes headings and title; both it and the source-body count satisfy 2,000-3,000 words. |
+| T6 | `pdftoppm -png -r 120 docs/Reporte_Ejecutivo_Proyecto2.pdf /tmp/opencode/proyecto2-reporte`, manual review of all five rendered pages, `pdfinfo`, and `qpdf --check`. | Passed: five 993x1404 rendered pages are visually legible; the ablation table and references render without clipping. PDF is A4, unencrypted, and qpdf reports no syntax or stream-encoding errors. |
 
 ## Work-unit evidence
 
@@ -84,3 +100,4 @@ evidence; no generated outputs will be invented.
 | T1 | `ea9aaa3` | Markdown structure reviewed. | N/A — planning document only. | Remove `odd/tasks/proyecto2-entrega-final.md`. |
 | T2 | `bec0330` | `uv run --with nbformat …` passed; `git diff --check` passed. | Full notebook run is pending authorized Colab T4 access. | Revert the raw-path simplification and Stage B epoch setting in `notebooks/proyecto2.ipynb`. |
 | T4 | `3839496` | Streamlit `AppTest` passed across all four filters; artifact parse check passed. | Same `AppTest` renders the application boundary without exceptions. | Revert this verification evidence only; no application source changed. |
+| T6 | `docs(proyecto2): add executive project report` | ReportLab generation, pypdf extraction and word count, rendered-page visual review, `pdfinfo`, and `qpdf --check` all passed. | N/A - this deliverable is a static PDF, validated through generation, extraction, rendering, and PDF integrity checks. | Revert `docs/Reporte_Ejecutivo_Proyecto2.pdf`, `docs/generar_reporte_ejecutivo_proyecto2.py`, and this task evidence only. |
