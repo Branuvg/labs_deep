@@ -77,7 +77,11 @@ and delivery evidence; no experimental outputs will be invented.
 - [ ] T5 — Deploy from `proyecto2` through the authorized Streamlit Cloud/GitHub
    session, confirm the public URL, and create the URL-only delivery file.
 - [x] T6 — Create and verify the executive PDF report, including factual scope,
-  references, AI-use declaration, text extraction, word count, and visual review.
+   references, AI-use declaration, text extraction, word count, and visual review.
+- [x] T7 — Convert the executive report to LaTeX with
+  `docs/Reporte_Ejecutivo_Proyecto2.tex` as the sole canonical source; regenerate
+  and verify the PDF without changing factual content. The first section and its
+  label must be exactly `Resumen`, never `Resumen ejecutivo`.
 
 ## Verification log
 
@@ -92,6 +96,8 @@ and delivery evidence; no experimental outputs will be invented.
 | T6 | `uv run --with reportlab python docs/generar_reporte_ejecutivo_proyecto2.py` | Passed: created `docs/Reporte_Ejecutivo_Proyecto2.pdf`; source body count is 2,072 words and the AI-use declaration is 65 words. |
 | T6 | `uv run --with pypdf python -c '...'` extracted all PDF pages and checked required factual markers. | Passed: 5 pages, 2,232 extracted body words, 17,005 extracted characters, and all required markers present. The extracted count includes headings and title; both it and the source-body count satisfy 2,000-3,000 words. |
 | T6 | `pdftoppm -png -r 120 docs/Reporte_Ejecutivo_Proyecto2.pdf /tmp/opencode/proyecto2-reporte`, manual review of all five rendered pages, `pdfinfo`, and `qpdf --check`. | Passed: five 993x1404 rendered pages are visually legible; the ablation table and references render without clipping. PDF is A4, unencrypted, and qpdf reports no syntax or stream-encoding errors. |
+| T7 | `pdflatex -interaction=nonstopmode -halt-on-error -output-directory docs docs/Reporte_Ejecutivo_Proyecto2.tex` (two passes), followed by log inspection. | Passed: produced the five-page LaTeX PDF; the final log contains no LaTeX errors, box warnings, or warnings. |
+| T7 | `qpdf --check docs/Reporte_Ejecutivo_Proyecto2.pdf`; `pdftotext -layout`; extraction assertions; and `pdftoppm -png -r 120` review of all five pages. | Passed: qpdf reported no syntax or stream-encoding errors; extraction has 2,223 body words and 2,461 total words, preserves accented text and all required factual markers, and contains no `Resumen ejecutivo`. Rendered pages show a legible table, references, and AI-use declaration without clipping. The ReportLab generator was removed, leaving the `.tex` file as the canonical source. |
 
 ## Work-unit evidence
 
@@ -101,3 +107,4 @@ and delivery evidence; no experimental outputs will be invented.
 | T2 | `bec0330` | `uv run --with nbformat …` passed; `git diff --check` passed. | Full notebook run is pending authorized Colab T4 access. | Revert the raw-path simplification and Stage B epoch setting in `notebooks/proyecto2.ipynb`. |
 | T4 | `3839496` | Streamlit `AppTest` passed across all four filters; artifact parse check passed. | Same `AppTest` renders the application boundary without exceptions. | Revert this verification evidence only; no application source changed. |
 | T6 | `docs(proyecto2): add executive project report` | ReportLab generation, pypdf extraction and word count, rendered-page visual review, `pdfinfo`, and `qpdf --check` all passed. | N/A - this deliverable is a static PDF, validated through generation, extraction, rendering, and PDF integrity checks. | Revert `docs/Reporte_Ejecutivo_Proyecto2.pdf`, `docs/generar_reporte_ejecutivo_proyecto2.py`, and this task evidence only. |
+| T7 | `docs(proyecto2): convert executive report to LaTeX` | Two-pass `pdflatex`, log inspection, `qpdf --check`, extraction/word-count assertions, phrase exclusion, and all-page render review passed. | N/A - this deliverable is a static PDF, validated through compilation, extraction, rendering, and PDF integrity checks. | Revert `docs/Reporte_Ejecutivo_Proyecto2.tex`, regenerated PDF, obsolete generator removal, and this task evidence only. |
