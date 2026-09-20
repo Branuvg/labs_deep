@@ -84,6 +84,9 @@ and delivery evidence; no experimental outputs will be invented.
   label must be exactly `Resumen`, never `Resumen ejecutivo`.
 - [x] T8 — Add and link the confirmed public repository and MVP resources in the
   executive report, then regenerate and verify the PDF.
+- [x] T9 — Correct the verified bibliographic metadata for DOI
+   `10.1109/TKDE.2023.3272396` in the executive report, regenerate the PDF, and
+   verify the corrected citation.
 
 ## Verification log
 
@@ -101,6 +104,7 @@ and delivery evidence; no experimental outputs will be invented.
 | T7 | `pdflatex -interaction=nonstopmode -halt-on-error -output-directory docs docs/Reporte_Ejecutivo_Proyecto2.tex` (two passes), followed by log inspection. | Passed: produced the five-page LaTeX PDF; the final log contains no LaTeX errors, box warnings, or warnings. |
 | T7 | `qpdf --check docs/Reporte_Ejecutivo_Proyecto2.pdf`; `pdftotext -layout`; extraction assertions; and `pdftoppm -png -r 120` review of all five pages. | Passed: qpdf reported no syntax or stream-encoding errors; extraction has 2,223 body words and 2,461 total words, preserves accented text and all required factual markers, and contains no `Resumen ejecutivo`. Rendered pages show a legible table, references, and AI-use declaration without clipping. The ReportLab generator was removed, leaving the `.tex` file as the canonical source. |
 | T8 | Two-pass `pdflatex -interaction=nonstopmode -halt-on-error -output-directory docs docs/Reporte_Ejecutivo_Proyecto2.tex`; `qpdf --check`; `pdftotext -layout`; and a `pypdf` assertion over PDF link annotations. | Passed: regenerated a five-page PDF. The source and PDF contain the labeled repository and MVP links; PDF annotations resolve to `https://github.com/Branuvg/labs_deep` and `https://labsdeep-proyecto2.streamlit.app/`. Text extraction includes `Enlaces del proyecto` and excludes `Resumen ejecutivo`. |
+| T9 | Two-pass `pdflatex -interaction=nonstopmode -halt-on-error -output-directory docs docs/Reporte_Ejecutivo_Proyecto2.tex`; `qpdf --check`; `pdftotext -layout` with citation assertions; `git diff --check`. | Passed: the five-page PDF compiled with no LaTeX errors or warnings; qpdf found no syntax or stream-encoding errors; extracted text contains Cheng, Ye, Xiang, Ma, Zhang, and Jiang (2023), *Anti-Money Laundering by Group-Aware Deep Graph Learning*, *IEEE Transactions on Knowledge and Data Engineering, 35*(12), 12444--12457, and DOI `10.1109/TKDE.2023.3272396`, while excluding the former card-fraud title. |
 
 ## Work-unit evidence
 
@@ -113,3 +117,4 @@ and delivery evidence; no experimental outputs will be invented.
 | T7 | `docs(proyecto2): convert executive report to LaTeX` | Two-pass `pdflatex`, log inspection, `qpdf --check`, extraction/word-count assertions, phrase exclusion, and all-page render review passed. | N/A - this deliverable is a static PDF, validated through compilation, extraction, rendering, and PDF integrity checks. | Revert `docs/Reporte_Ejecutivo_Proyecto2.tex`, regenerated PDF, obsolete generator removal, and this task evidence only. |
 | T5 | `docs(proyecto2): record public MVP URL` | Exact URL-only content check passed. | N/A — public reachability was confirmed by the user in an incognito window; no automated external check was performed here. | Remove `docs/Enlace_MVP_Proyecto2.txt` and revert the T5 task evidence only. |
 | T8 | `docs(proyecto2): link public project resources` | Two-pass LaTeX compilation, qpdf integrity check, text extraction, link-annotation assertions, and phrase exclusion all passed. | N/A — this deliverable is a static PDF, validated through compilation, extraction, annotations, and PDF integrity checks. | Revert the new report section, regenerated PDF, LaTeX auxiliary files if tracked, and T8 task evidence only. |
+| T9 | `fix(proyecto2): correct AML graph learning reference` | Two-pass LaTeX compilation, qpdf integrity check, extracted-text citation and former-title exclusion assertions, and `git diff --check` passed. | N/A — this deliverable is a static PDF, validated through compilation, extraction, and PDF integrity checks. | Revert the corrected Cheng et al. reference, regenerated PDF, and T9 task evidence only. |
